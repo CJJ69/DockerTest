@@ -6,6 +6,8 @@ resources:
 
 variables:
   OSVersion: '1803'
+  ContainerRegistryName: 'cjcreativetech'
+  ImageName: 'mssql-server-windows-express'
 
 jobs:
 - job: Windows
@@ -23,7 +25,7 @@ jobs:
 
       arguments: '--build-arg SERVERCORE_VERSION=$(OSVersion)'
 
-      imageName: '$(Build.Repository.Name):$(OSVersion)'
+      imageName: '$(ContainerRegistryName)/$(ImageName):$(OSVersion)'
 
       qualifyImageName: false
 
@@ -38,6 +40,6 @@ jobs:
 
       command: 'Push an image'
 
-      imageName: '$(Build.Repository.Name):$(OSVersion)'
+      imageName: '$(ContainerRegistryName)/$(ImageName):$(OSVersion)'
 
       qualifyImageName: false
