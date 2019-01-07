@@ -1,77 +1,43 @@
-resources:
+trigger:
+- master
 
+resources:
 - repo: self
 
-queue:
-
-  name: Hosted
-
-
-
 variables:
-
   OSVersion: '1803'
 
-steps:
+jobs:
+- job: Windows
 
-- task: Docker@1
+  pool:
+    vmImage: 'win1803'
 
-  displayName: 'Build an image'
+  steps:
+  - task: Docker@1
+    displayName: 'Build an image'
+    inputs:
+      containerregistrytype: 'Container Registry'
 
-  inputs:
+      dockerRegistryEndpoint: cjcreativetech
 
-    containerregistrytype: 'Container Registry'
+      arguments: '--build-arg SERVERCORE_VERSION=$(OSVersion)'
 
+      imageName: '$(Build.Repository.Name):$(OSVersion)'
 
+      qualifyImageName: false
 
-    dockerRegistryEndpoint: cjcreativetech
+      includeLatestTag: true
 
+  - task: Docker@1
+    displayName: 'Push an image'
+    inputs:
+      containerregistrytype: 'Container Registry'
 
+      dockerRegistryEndpoint: cjcreativetech
 
-    arguments: '--build-arg SERVERCORE_VERSION=$(OSVersion)'
+      command: 'Push an image'
 
+      imageName: '$(Build.Repository.Name):$(OSVersion)'
 
-
-    imageName: '$(Build.Repository.Name):$(OSVersion)'
-
-
-
-    qualifyImageName: false
-
-
-
-    includeLatestTag: true
-
-
-
-
-
-- task: Docker@1
-
-  displayName: 'Push an image'
-
-  inputs:
-
-    containerregistrytype: 'Container Registry'
-
-
-
-    dockerRegistryEndpoint: cjcreativetech
-
-
-
-    command: 'Push an image'
-
-
-
-    imageName: '$(Build.Repository.Name):$(OSVersion)'
-
-
-
-    qualifyImageName: false
-
-
-
-
-
-
+      qualifyImageName: false
